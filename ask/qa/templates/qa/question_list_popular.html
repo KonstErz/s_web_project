@@ -8,7 +8,7 @@
     <ul>
       {% for question in questions %}
       <li>
-        <a href="{{ question.get_absolute_url }}">{{ question.title }}</a>
+        <a href="{{ question.get_url }}">{{ question.title }}</a>
       </li>
       {% endfor %}
     </ul>
