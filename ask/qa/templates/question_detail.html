@@ -9,7 +9,7 @@
     <p>{{ question.text }}, ({{ question.author_id }})</p>
     <hr>
     <ul>
-    {% for answer in question.answer_set.all %}
+    {% for answer in answers %}
         <li>{{ answer }}, ({{ answer.author_id }})</li>
     {% endfor %}
     </ul>

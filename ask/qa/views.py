@@ -39,5 +39,10 @@ def question_details(request, num):
         question = Question.objects.get(id=num)
     except Question.DoesNotExist:
         raise Http404
+    try:
+        answers = Answer.objects.filter(question=question)
+    except Answer.DoesNotExist:
+        answers = None
     return render(request, 'question_detail.html',
-                  {'question': question, })
+                  {'question': question,
+                   'answers': answers, })
