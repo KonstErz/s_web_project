@@ -2,17 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ question }}</title>
+    <title>{{ title }}. {{ question.id }}{{ page }}</title>
 </head>
 <body>
-    <h1>{{ question }}</h1>
-    <p>{{ question.text }}, ({{ question.author_id }})</p>
+    {% if question %}
+    <div class="question">
+        <h1>Question {{ question.id }}: {{ question.title }}</h1>
+        <h2>Rating: {{ question.rating }}. Author - {{ question.author.username }}. Added {{ question.added_at }}</h2>
+        <p>{{ question.text }}</p>
+    </div>
+    {% endif %}
     <hr>
-    <ul>
-    {% for answer in answers %}
-        <li>{{ answer }}, ({{ answer.author_id }})</li>
-    {% endfor %}
-    </ul>
-    <hr>
+    {% if answers %}
+    <div class="answers">
+        {% for answer in answers %}
+        <div class="answer">
+            <h3>Answer {{ answer.id }}: Author - {{ answer.author.username }}</h3>
+            <p>{{ answer.text }}</p>
+        </div>
+        <hr>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>There are no answers to this question in the database yet.</p>
+    {% endif %}
 </body>
 </html>

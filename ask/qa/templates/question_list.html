@@ -2,12 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ title }} Questions</title>
+    <title>{{ title }}. Page {{ questions.number }}{{ page }}</title>
 </head>
 <body>
-    <h1>{{ title }} Questions</h1>
-    {% for question in questions %}
-        <p><a href="{{ question.get_url }}">{{ question }}, ({{ question.author_id }})</a></p>
-    {% endfor %}
+    {% if questions %}
+    <div class="questions">
+        {% for question in questions %}
+        <div class="question">
+            <h3>Question {{ question.id }}: {{ question.title }}</h3>
+            <h5>Rating: {{ question.rating }}. Author - {{ question.author.username }}. Added {{ question.added_at }}</h5>
+            <p>{{ question.text }}</p>
+            {# backreference for ForeignKey #}
+            {% with answers=question.answer_set.count %}
+            <p><a href="/question/{{ question.id }}/">
+                Answers: {{ answers }}</a>
+            </p>
+            {% endwith %}
+        </div>
+        <hr>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>There are no questions in the database yet.</p>
+    {% endif %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if questions.has_previous %}
+            <a href="?page={{ questions.previous_page_number }}&limit={{ limit }}"><<</a>
+            {% endif %}
+            <span class="current">
+                Page {{ questions.number }} of {{ questions.paginator.num_pages }}
+            </span>
+            {% if questions.has_next %}
+            <a href="?page={{ questions.next_page_number }}&limit={{ limit }}">>></a>
+            {% endif %}
+        </span>
+    </div>
 </body>
 </html>
