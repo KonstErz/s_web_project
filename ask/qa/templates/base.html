@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Questions & Answers - {% endblock %}</title>
+</head>
+<body>
+    {% block content %}
+    <nav class="navigation">
+        <a href="/">New questions</a> |
+        <a href="/popular/">Popular questions</a> |
+        <a href="/ask/">Ask a Question</a> |
+    </nav>
+    <h1>{{ title }}</h1>
+    {% endblock %}
+</body>
+</html>

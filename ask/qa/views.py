@@ -1,8 +1,9 @@
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_GET
 from .models import Question, Answer
+from .forms import AskForm, AnswerForm
 
 
 def test(request, *args, **kwargs):
@@ -57,9 +58,36 @@ def popular(request, *args, **kwargs):
 def question_details(request, pk):
     question = get_object_or_404(Question, id=pk)
     answers = Answer.objects.filter(question=pk).order_by('-added_at')
+    if request.method == 'POST':
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            form._user = request.user
+            form.save()
+            url = question.get_url()
+            return HttpResponseRedirect(url)
+    else:
+        form = AnswerForm(initial={'question': question.id})
     context = {
         'title': 'Question Page',
         'question': question,
         'answers': answers,
+        'form': form,
     }
     return render(request, 'question_detail.html', context)
+
+
+def ask(request):
+    if request.method == 'POST':
+        form = AskForm(request.POST)
+        if form.is_valid():
+            form._user = request.user
+            question = form.save()
+            url = question.get_url()
+            return HttpResponseRedirect(url)
+    else:
+        form = AskForm()
+    context = {
+        'title': 'Ask a Question',
+        'form': form,
+    }
+    return render(request, 'ask_question.html', context)

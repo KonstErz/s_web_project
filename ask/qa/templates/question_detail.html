@@ -1,30 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}. {{ question.id }}{{ page }}</title>
-</head>
-<body>
-    {% if question %}
-    <div class="question">
-        <h1>Question {{ question.id }}: {{ question.title }}</h1>
-        <h2>Rating: {{ question.rating }}. Author - {{ question.author.username }}. Added {{ question.added_at }}</h2>
-        <p>{{ question.text }}</p>
+{% extends 'base.html' %}
+{% block title %}
+{{ block.super }}{{ title }}. {{ question.title }}
+{% endblock %}
+{% block content %}
+{{ block.super }}
+{% if question %}
+<div class="question">
+    <h1>Question {{ question.id }}: {{ question.title }}</h1>
+    <h2>Rating: {{ question.rating }}. Author - {{ question.author.username }}. Added {{ question.added_at }}</h2>
+    <p>{{ question.text }}</p>
+</div>
+{% endif %}
+<hr>
+{% if answers %}
+<div class="answers">
+    {% for answer in answers %}
+    <div class="answer">
+        <h3>Answered {{ answer.author.username }}, {{ answer.added_at }}:</h3>
+        <p>{{ answer.text }}</p>
     </div>
-    {% endif %}
     <hr>
-    {% if answers %}
-    <div class="answers">
-        {% for answer in answers %}
-        <div class="answer">
-            <h3>Answer {{ answer.id }}: Author - {{ answer.author.username }}</h3>
-            <p>{{ answer.text }}</p>
-        </div>
-        <hr>
+    {% endfor %}
+</div>
+{% else %}
+    <p>There are no answers to this question in the database yet.</p>
+{% endif %}
+{% for e in form.non_field_errors %}
+    <div class="alert alert-danger">{{ e }}</div>
+{% endfor %}
+<form class="form-horizontal" method="post" action="{{ question.get_url }}">
+    {% csrf_token %}
+    <fieldset>
+        {% for field in form %}
+            <div class="control-group {% if field.errors %}has-error{% endif %}">
+                {% if field.name != 'question' %}
+                    <label class="control-label">{{ field.label }}</label>
+                {% endif %}
+                <div class="controls">{{ field }}</div>
+            </div>
         {% endfor %}
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">To answer</button>
     </div>
-    {% else %}
-        <p>There are no answers to this question in the database yet.</p>
-    {% endif %}
-</body>
-</html>
+</form>
+{% endblock %}
