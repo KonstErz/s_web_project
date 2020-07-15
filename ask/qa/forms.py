@@ -5,6 +5,7 @@ from .models import Question, Answer
 class AskForm(forms.Form):
     title = forms.CharField(max_length=1024)
     text = forms.CharField(widget=forms.Textarea)
+    author = forms.IntegerField(widget=forms.HiddenInput)
 
     def clean_title(self):
         title = self.cleaned_data['title']
@@ -22,15 +23,14 @@ class AskForm(forms.Form):
         pass
 
     def save(self):
-        question = Question(**self.cleaned_data)
-        question.author_id = self._user.id
-        question.save()
-        return question
+        self.cleaned_data['author'] = self._user
+        return Question.objects.create(**self.cleaned_data)
 
 
 class AnswerForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea)
     question = forms.IntegerField(widget=forms.HiddenInput)
+    author = forms.IntegerField(widget=forms.HiddenInput)
 
     def clean_text(self):
         text = self.cleaned_data['text']
@@ -50,7 +50,5 @@ class AnswerForm(forms.Form):
         pass
 
     def save(self):
-        answer = Answer(**self.cleaned_data)
-        answer.author_id = self._user.id
-        answer.save()
-        return answer
+        self.cleaned_data['author'] = self._user
+        return Answer.objects.create(**self.cleaned_data)

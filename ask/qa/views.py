@@ -62,8 +62,9 @@ def question_details(request, pk):
     if request.method == 'POST':
         form = AnswerForm(request.POST)
         if form.is_valid():
-            form._user = request.user
-            _ = form.save()
+            form._user = User.objects.get(id=1)
+            form.clean()
+            form.save()
             url = question.get_url()
             return HttpResponseRedirect(url)
     else:
@@ -81,7 +82,7 @@ def ask(request):
     if request.method == 'POST':
         form = AskForm(request.POST)
         if form.is_valid():
-            form._user = request.user
+            form._user = User.objects.get(id=1)
             question = form.save()
             url = question.get_url()
             return HttpResponseRedirect(url)
