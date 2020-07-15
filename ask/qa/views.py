@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_GET
 from .models import Question, Answer
 from .forms import AskForm, AnswerForm
+from django.contrib.auth.models import User
 
 
 def test(request, *args, **kwargs):
@@ -61,7 +62,7 @@ def question_details(request, pk):
     if request.method == 'POST':
         form = AnswerForm(request.POST)
         if form.is_valid():
-            form._user = request.user
+            form._user = User.objects.get(id=1)
             form.save()
             url = question.get_url()
             return HttpResponseRedirect(url)
@@ -80,7 +81,7 @@ def ask(request):
     if request.method == 'POST':
         form = AskForm(request.POST)
         if form.is_valid():
-            form._user = request.user
+            form._user = User.objects.get(id=1)
             question = form.save()
             url = question.get_url()
             return HttpResponseRedirect(url)

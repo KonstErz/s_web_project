@@ -20,7 +20,7 @@ class AskForm(forms.Form):
 
     def save(self):
         question = Question(**self.cleaned_data)
-        question.author_id = self._user.id
+        self.cleaned_data['author'] = self._user
         question.save()
         return question
 
@@ -45,6 +45,6 @@ class AnswerForm(forms.Form):
 
     def save(self):
         answer = Answer(**self.cleaned_data)
-        answer.author_id = self._user.id
+        self.cleaned_data['author'] = self._user
         answer.save()
         return answer
