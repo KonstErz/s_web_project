@@ -6,6 +6,10 @@ class AskForm(forms.Form):
     title = forms.CharField(max_length=1024, help_text='Enter the name (title) of your question')
     text = forms.CharField(widget=forms.Textarea, help_text='Enter the text of your question')
 
+    def __init__(self, user, *args, **kwargs):
+        self._user = user
+        super(AskForm, self).__init__(*args, **kwargs)
+
     def clean_title(self):
         title = self.cleaned_data['title']
         if title.strip() == '':
@@ -19,8 +23,8 @@ class AskForm(forms.Form):
         return text
 
     def save(self):
-        question = Question(**self.cleaned_data)
         self.cleaned_data['author'] = self._user
+        question = Question(**self.cleaned_data)
         question.save()
         return question
 
@@ -28,6 +32,10 @@ class AskForm(forms.Form):
 class AnswerForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea, help_text='Enter the text of your answer')
     question = forms.IntegerField(widget=forms.HiddenInput, help_text='Enter Question ID')
+
+    def __init__(self, user, *args, **kwargs):
+        self._user = user
+        super(AnswerForm, self).__init__(*args, **kwargs)
 
     def clean_text(self):
         text = self.cleaned_data['text']
@@ -44,7 +52,7 @@ class AnswerForm(forms.Form):
         return question
 
     def save(self):
-        answer = Answer(**self.cleaned_data)
         self.cleaned_data['author'] = self._user
+        answer = Answer(**self.cleaned_data)
         answer.save()
         return answer
