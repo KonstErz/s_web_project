@@ -20,7 +20,7 @@ class AskForm(forms.Form):
         return text
 
     def clean(self):
-        pass
+        return self.cleaned_data
 
     def save(self):
         self.cleaned_data['author'] = self._user
@@ -47,7 +47,7 @@ class AnswerForm(forms.Form):
         return question
 
     def clean(self):
-        pass
+        return self.cleaned_data
 
     def save(self):
         self.cleaned_data['author'] = self._user
