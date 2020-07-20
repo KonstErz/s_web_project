@@ -5,7 +5,7 @@ from django.views.decorators.http import require_GET
 from .models import Question, Answer
 from .forms import AskForm, AnswerForm, SignupForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
-from django.urls import reverse
+# from django.urls import reverse
 
 
 def paginate(request, qs):
@@ -104,7 +104,7 @@ def signup(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-            return HttpResponseRedirect(reverse('question_list'))
+            return HttpResponseRedirect('/')
     else:
         form = SignupForm()
     context = {
@@ -125,7 +125,7 @@ def log_in(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-            return HttpResponseRedirect(reverse('question_list'))
+            return HttpResponseRedirect('/')
     else:
         form = LoginForm()
     context = {
@@ -138,4 +138,4 @@ def log_in(request):
 def log_out(request):
     if request.user is not None:
         logout(request)
-        return HttpResponseRedirect(reverse('question_list'))
+        return HttpResponseRedirect('/')
