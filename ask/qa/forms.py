@@ -58,24 +58,27 @@ class SignupForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput, required=False)
 
     def clean_username(self):
-        username = self.cleaned_data['username']
-        if username.strip() == '':
-            raise forms.ValidationError('Username field cannot be empty', code='validation_error')
-        elif User.objects.filter(username=username).exists():
-            raise forms.ValidationError('A user with the same username already exists', code='validation_error')
+        username = self.cleaned_data.get('username')
+        if not username:
+            raise forms.ValidationError('Username field cannot be empty')
+        try:
+            User.objects.get(username=username)
+            raise forms.ValidationError('A user with the same username already exists')
+        except User.DoesNotExist:
+            pass
         return username
 
     def clean_email(self):
-        email = self.cleaned_data['email']
-        if email.strip() == '':
-            raise forms.ValidationError('Email field cannot be empty', code='validation_error')
+        email = self.cleaned_data.get('email')
+        if not email:
+            raise forms.ValidationError('Email field cannot be empty')
         return email
 
     def clean_password(self):
-        password = self.cleaned_data['password']
-        if password.strip() == '':
-            raise forms.ValidationError('Password field cannot be empty', code='validation_error')
-        self.raw_password = password
+        password = self.cleaned_data.get('password')
+        if not password:
+            raise forms.ValidationError('Password field cannot be empty')
+        self.raw_passwrd = password
         return make_password(password)
 
     def save(self):

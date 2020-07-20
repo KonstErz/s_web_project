@@ -5,7 +5,6 @@ from django.views.decorators.http import require_GET
 from .models import Question, Answer
 from .forms import AskForm, AnswerForm, SignupForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
-# from django.urls import reverse
 
 
 def paginate(request, qs):
@@ -98,9 +97,8 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data['username']
-            password = form.raw_password
-            user = authenticate(username=username,
-                                password=password)
+            password = form.raw_passwrd
+            user = authenticate(username=username, password=password)
             if user is not None:
                 if user.is_active:
                     login(request, user)
@@ -120,8 +118,7 @@ def log_in(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            user = authenticate(username=username,
-                                password=password)
+            user = authenticate(username=username, password=password)
             if user is not None:
                 if user.is_active:
                     login(request, user)
