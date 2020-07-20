@@ -3,8 +3,9 @@ from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_GET
 from .models import Question, Answer
-from .forms import AskForm, AnswerForm
-from django.contrib.auth.models import User
+from .forms import AskForm, AnswerForm, SignupForm, LoginForm
+from django.contrib.auth import authenticate, login, logout
+from django.urls import reverse
 
 
 def test(request, *args, **kwargs):
@@ -92,4 +93,53 @@ def ask(request):
         'title': 'Ask a Question',
         'form': form,
     }
-    return render(request, 'ask_question.html', context)
+    return render(request, 'base_form.html', context)
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data['username']
+            password = form.raw_password
+            user = authenticate(username=username,
+                                password=password)
+            if user is not None:
+                if user.is_active:
+                    log_in(request, user)
+            return HttpResponseRedirect(reverse('question_list'))
+    else:
+        form = SignupForm()
+    context = {
+        'title': 'User registration',
+        'form': form,
+    }
+    return render(request, 'base_form.html', context)
+
+
+def log_in(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username,
+                                password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+            return HttpResponseRedirect(reverse('question_list'))
+    else:
+        form = LoginForm()
+    context = {
+        'title': 'Sign in',
+        'form': form,
+    }
+    return render(request, 'base_form.html', context)
+
+
+def log_out(request):
+    if request.user is not None:
+        logout(request)
+        return HttpResponseRedirect(reverse('question_list'))

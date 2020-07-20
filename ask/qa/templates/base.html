@@ -10,6 +10,14 @@
         <a href="/">New questions</a> |
         <a href="/popular/">Popular questions</a> |
         <a href="/ask/">Ask a Question</a> |
+        <a href="/signup/">Sign Up</a> |
+        {% if not request.user.is_anonymous %}
+            Current user:
+            {{ request.user }}
+            <a href="/logout/">Log Out</a>
+        {% else %}
+            <a href="/login/">Log In</a>
+        {% endif %}
     </nav>
     <h1>{{ title }}</h1>
     {% endblock %}
