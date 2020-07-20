@@ -100,14 +100,14 @@ def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
             username = form.cleaned_data['username']
             password = form.raw_password
             user = authenticate(username=username,
                                 password=password)
             if user is not None:
                 if user.is_active:
-                    log_in(request, user)
+                    login(request, user)
             return HttpResponseRedirect(reverse('question_list'))
     else:
         form = SignupForm()
