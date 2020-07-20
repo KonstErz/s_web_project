@@ -20,12 +20,9 @@ class AskForm(forms.Form):
             raise forms.ValidationError('Text field cannot be empty', code='validation_error')
         return text
 
-    def clean(self):
-        return self.cleaned_data
-
     def save(self):
         question = Question(**self.cleaned_data)
-        question.author = self._user
+        question.author_id = self._user.id
         question.save()
         return question
 
@@ -45,15 +42,12 @@ class AnswerForm(forms.Form):
         try:
             question = Question.objects.get(id=question_id)
         except Question.DoesNotExist:
-            question = None
+            raise forms.ValidationError('Question not found', code='validation_error')
         return question
-
-    def clean(self):
-        return self.cleaned_data
 
     def save(self):
         answer = Answer(**self.cleaned_data)
-        answer.author = self._user
+        answer.author_id = self._user.id
         answer.save()
         return answer
 

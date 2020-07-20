@@ -8,10 +8,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 
 
-def test(request, *args, **kwargs):
-    return HttpResponse('OK')
-
-
 def paginate(request, qs):
     try:
         limit = int(request.GET.get('limit', 10))
