@@ -1,6 +1,6 @@
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponseServerError
 from django.core.paginator import Paginator, EmptyPage
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_GET
 from .models import Question, Answer
 from .forms import AskForm, AnswerForm, SignupForm, LoginForm
@@ -93,16 +93,18 @@ def ask(request):
 
 def signup(request):
     if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
         form = SignupForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            username = form.cleaned_data['username']
-            password = form.raw_passwrd
-            user = authenticate(username=username, password=password)
+            form._user = request.user
+            form.save()
+            user = authenticate(request, username=username, password=password)
             if user is not None:
-                if user.is_active:
-                    login(request, user)
-            return HttpResponseRedirect('/')
+                login(request, user)
+                return redirect('/')
+            else:
+                return HttpResponseServerError()
     else:
         form = SignupForm()
     context = {
@@ -113,16 +115,19 @@ def signup(request):
 
 
 def log_in(request):
+    url = request.GET.get('next', '/')
+
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(username=username, password=password)
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(request, username=username, password=password)
             if user is not None:
-                if user.is_active:
-                    login(request, user)
-            return HttpResponseRedirect('/')
+                login(request, user)
+                return redirect(url)
+            else:
+                form.add_error(None, 'Username does not exist or password is not correct')
     else:
         form = LoginForm()
     context = {

@@ -1,7 +1,6 @@
 from django import forms
 from .models import Question, Answer
 from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
 
 
 class AskForm(forms.Form):
@@ -53,62 +52,22 @@ class AnswerForm(forms.Form):
 
 
 class SignupForm(forms.Form):
-    username = forms.CharField(max_length=100, required=False)
-    email = forms.EmailField(required=False)
-    password = forms.CharField(widget=forms.PasswordInput, required=False)
+    username = forms.CharField(max_length=150)
+    email = forms.EmailField(max_length=100)
+    password = forms.CharField(widget=forms.PasswordInput, max_length=100)
 
     def clean_username(self):
-        username = self.cleaned_data.get('username')
-        if not username:
-            raise forms.ValidationError('Username field cannot be empty')
-        try:
-            User.objects.get(username=username)
+        username = self.cleaned_data['username']
+        if User.objects.filter(username=username).exists():
             raise forms.ValidationError('A user with the same username already exists')
-        except User.DoesNotExist:
-            pass
         return username
 
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if not email:
-            raise forms.ValidationError('Email field cannot be empty')
-        return email
-
-    def clean_password(self):
-        password = self.cleaned_data.get('password')
-        if not password:
-            raise forms.ValidationError('Password field cannot be empty')
-        self.raw_passwrd = password
-        return make_password(password)
-
     def save(self):
-        user = User(**self.cleaned_data)
+        user = User.objects.create_user(**self.cleaned_data)
         user.save()
         return user
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=100, required=False)
-    password = forms.CharField(widget=forms.PasswordInput, required=False)
-
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        if not username:
-            raise forms.ValidationError('Username not specified')
-        return username
-
-    def clean_password(self):
-        password = self.cleaned_data.get('password')
-        if not password:
-            raise forms.ValidationError('Password not specified')
-        return password
-
-    def clean(self):
-        username = self.cleaned_data.get('username')
-        password = self.cleaned_data.get('password')
-        try:
-            user = User.objects.get(username=username)
-        except User.DoesNotExist:
-            raise forms.ValidationError('The username or password you entered is incorrect')
-        if not user.check_password(password):
-            raise forms.ValidationError('The username or password you entered is incorrect')
+    username = forms.CharField(max_length=150)
+    password = forms.CharField(widget=forms.PasswordInput, max_length=100)
