@@ -1,6 +1,6 @@
 from django.http import Http404, HttpResponseRedirect, HttpResponseServerError
 from django.core.paginator import Paginator, EmptyPage
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, reverse
 from django.views.decorators.http import require_GET
 from .models import Question, Answer
 from .forms import AskForm, AnswerForm, SignupForm, LoginForm
@@ -59,7 +59,6 @@ def question_details(request, pk):
         form = AnswerForm(request.POST)
         if form.is_valid():
             form._user = request.user
-            form.clean()
             form.save()
             url = question.get_url()
             return HttpResponseRedirect(url)
@@ -93,16 +92,16 @@ def ask(request):
 
 def signup(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
         form = SignupForm(request.POST)
         if form.is_valid():
-            form._user = request.user
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
             form.save()
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(username=username,
+                                password=password)
             if user is not None:
                 login(request, user)
-                return redirect('/')
+                return HttpResponseRedirect(reverse('question_list'))
             else:
                 return HttpResponseServerError()
     else:
@@ -115,19 +114,18 @@ def signup(request):
 
 
 def log_in(request):
-    url = request.GET.get('next', '/')
-
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-            user = authenticate(request, username=username, password=password)
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username,
+                                password=password)
             if user is not None:
                 login(request, user)
-                return redirect(url)
+                return HttpResponseRedirect(reverse('question_list'))
             else:
-                form.add_error(None, 'Username does not exist or password is not correct')
+                form.add_error(None, 'The username or password you entered is incorrect')
     else:
         form = LoginForm()
     context = {
@@ -140,4 +138,4 @@ def log_in(request):
 def log_out(request):
     if request.user is not None:
         logout(request)
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect(reverse('question_list'))

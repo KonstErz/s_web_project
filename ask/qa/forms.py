@@ -10,13 +10,13 @@ class AskForm(forms.Form):
     def clean_title(self):
         title = self.cleaned_data['title']
         if title.strip() == '':
-            raise forms.ValidationError('Title field cannot be empty', code='validation_error')
+            raise forms.ValidationError('Title field cannot be empty')
         return title
 
     def clean_text(self):
         text = self.cleaned_data['text']
         if text.strip() == '':
-            raise forms.ValidationError('Text field cannot be empty', code='validation_error')
+            raise forms.ValidationError('Text field cannot be empty')
         return text
 
     def save(self):
@@ -33,7 +33,7 @@ class AnswerForm(forms.Form):
     def clean_text(self):
         text = self.cleaned_data['text']
         if text.strip() == '':
-            raise forms.ValidationError('Text field cannot be empty', code='validation_error')
+            raise forms.ValidationError('Text field cannot be empty')
         return text
 
     def clean_question(self):
@@ -41,7 +41,7 @@ class AnswerForm(forms.Form):
         try:
             question = Question.objects.get(id=question_id)
         except Question.DoesNotExist:
-            raise forms.ValidationError('Question not found', code='validation_error')
+            raise forms.ValidationError('Question not found')
         return question
 
     def save(self):
@@ -52,15 +52,21 @@ class AnswerForm(forms.Form):
 
 
 class SignupForm(forms.Form):
-    username = forms.CharField(max_length=150)
-    email = forms.EmailField(max_length=100)
-    password = forms.CharField(widget=forms.PasswordInput, max_length=100)
+    username = forms.CharField(max_length=150, required=False)
+    email = forms.EmailField(required=False)
+    password = forms.CharField(widget=forms.PasswordInput, required=False)
 
     def clean_username(self):
         username = self.cleaned_data['username']
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError('A user with the same username already exists')
         return username
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('A user with the same email already exists')
+        return email
 
     def save(self):
         user = User.objects.create_user(**self.cleaned_data)
@@ -69,5 +75,5 @@ class SignupForm(forms.Form):
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=150)
-    password = forms.CharField(widget=forms.PasswordInput, max_length=100)
+    username = forms.CharField(max_length=150, required=False)
+    password = forms.CharField(widget=forms.PasswordInput, required=False)
