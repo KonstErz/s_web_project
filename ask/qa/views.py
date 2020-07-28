@@ -1,29 +1,13 @@
-from django.http import Http404, HttpResponseRedirect, HttpResponseServerError
-from django.core.paginator import Paginator, EmptyPage
+from django.http import HttpResponseRedirect, HttpResponseServerError
+from .paginations import paginate
 from django.shortcuts import render, get_object_or_404, reverse
 from django.views.decorators.http import require_GET
 from .models import Question, Answer
 from .forms import AskForm, AnswerForm, SignupForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
-
-
-def paginate(request, qs):
-    try:
-        limit = int(request.GET.get('limit', 10))
-    except ValueError:
-        limit = 10
-    if limit > 100:
-        limit = 10
-    try:
-        page = int(request.GET.get('page', 1))
-    except ValueError:
-        raise Http404
-    paginator = Paginator(qs, limit)
-    try:
-        page = paginator.page(page)
-    except EmptyPage:
-        page = paginator.page(paginator.num_pages)
-    return paginator, page, limit
+from django.contrib.auth.decorators import login_required
+from .ajax import (HttpResponseAjax, HttpResponseAjaxError,
+                   login_required_ajax)
 
 
 @require_GET
@@ -52,8 +36,12 @@ def popular(request, *args, **kwargs):
     return render(request, 'question_list.html', context)
 
 
+@login_required(login_url='/login/')
 def question_details(request, pk):
     question = get_object_or_404(Question, id=pk)
+    is_liked = False
+    if question.likes.filter(id=request.user.id).exists():
+        is_liked = True
     answers = Answer.objects.filter(question=pk).order_by('-added_at')
     if request.method == 'POST':
         form = AnswerForm(request.POST)
@@ -68,11 +56,13 @@ def question_details(request, pk):
         'title': 'Question Page',
         'question': question,
         'answers': answers,
+        'is_liked': is_liked,
         'form': form,
     }
     return render(request, 'question_detail.html', context)
 
 
+@login_required(login_url='/login/')
 def ask(request):
     if request.method == 'POST':
         form = AskForm(request.POST)
@@ -139,3 +129,25 @@ def log_out(request):
     if request.user is not None:
         logout(request)
         return HttpResponseRedirect(reverse('question_list'))
+
+
+@login_required_ajax
+def like_question(request):
+    question = get_object_or_404(Question, id=request.POST.get('question_id'))
+    is_liked = False
+    if question.likes.filter(id=request.user.id).exists():
+        question.likes.remove(request.user)
+        question.rating -= 1
+        is_liked = False
+        message = 'You disliked this question'
+    else:
+        question.likes.add(request.user)
+        question.rating += 1
+        is_liked = True
+        message = 'You liked this question'
+    question.save()
+    if question:
+        return HttpResponseAjax(message=message)
+    else:
+        return HttpResponseAjaxError(code='bad_params',
+                                     message='Question does not exist',)

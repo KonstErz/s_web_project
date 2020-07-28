@@ -12,6 +12,29 @@
 </div>
 {% endif %}
 <hr>
+{% if is_liked %}
+    <input type="button" id="dislike" name="{{ question.id }}" value="Dislike" />
+{% else %}
+    <input type="button" id="like" name="{{ question.id }}" value="Like" />
+{% endif %}
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script type="text/javascript">
+    $("#dislike, #like").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'like_question' %}",
+            data: {'question_id': $(this).attr('name'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            dataType: "json",
+            success: function (response) {
+                alert(response.message);
+                location.reload(true);
+            },
+            error: function (rs, e) {
+                alert(rs.responseText);
+            }
+        });
+    })
+</script>
 {% if answers %}
 <div class="answers">
     {% for answer in answers %}
@@ -23,7 +46,7 @@
     {% endfor %}
 </div>
 {% else %}
-    <p>There are no answers to this question in the database yet.</p>
+    <p>There are no answers to this question yet.</p>
 {% endif %}
 {% for e in form.non_field_errors %}
     <div class="alert alert-danger">{{ e }}</div>
