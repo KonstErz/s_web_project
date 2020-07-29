@@ -1,6 +1,6 @@
 # Questions & Answers
 
-| [Русская версия](https://github.com/KonstErz/s_web_project/blob/master/README.ru.md) |
+| [English version](https://github.com/KonstErz/s_web_project/blob/master/README.md) |
 
 ### The service is implemented using the Django web framework tools.
 
