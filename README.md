@@ -102,7 +102,7 @@ and also must have Python3 installed on your system (python 3.6+ recommended).
 
 Can check if Python finds Django module:
     
-    `python3 -m django --version`
+    python3 -m django --version
     
 5. This project can work on 2 databases: MySQL (by default) and SQLite 3. You need to go to the MySQL console client (from the root password) and create a database for the Django web application to work:
 
@@ -126,7 +126,8 @@ To exit MySQL use the key combination Ctrl+D.
     python3 manage.py runserver
     ```
 
-Now you can go to the server http://localhost:8000/ in your browser. Try to register a test user in the system, add new questions and answers. Ctrl+C - to exit debug mode of a web application and `deactivate` - command to exit the virtual environment.
+Now you can go to the server http://localhost:8000/ in your browser. Try to register a test user in the system, add new questions and answers. 
+Ctrl+C - to exit debug mode of a web application and `deactivate` - command to exit the virtual environment.
 
 ### Quick guide to starting the service in the testing terminal of the online course "Web Technologies"
 

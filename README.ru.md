@@ -2,113 +2,109 @@
 
 | [English version](https://github.com/KonstErz/s_web_project/blob/master/README.md) |
 
-### The service is implemented using the Django web framework tools.
+### Сервис реализован с использованием инструментов веб-фреймворка Django.
 
 ---
 
 
-## Purpose
+## Назначение
 
-The project is a service of answering questions. The user of the service has the opportunity to register, ask a question, answer questions from other users. Also, the user can mark the questions using the "Like" button, changing their rating.
+Проект представляет собой сервис ответов на вопросы. Пользователь сервиса имеет возможность зарегистрироваться, задать вопрос, ответить на вопросы других пользователей. Также пользователь может отметить вопросы с помощь кнопки "Like", изменяя их рейтинг.
 
-## Main project entities
+## Основные сущности проекта
 
-1. User: username, password, email;
-2. Question: title, text, author, publish date, rating;
-3. Answer: text, question, publish date, author;
-4. Like: question, user.
+1. Пользователь: имя, пароль, email;
+2. Вопрос: заголовок, текст, автор, дата публикации, рейтинг;
+3. Ответ: текст, вопрос, дата публикации, автор;
+4. Лайк: вопрос, пользователь.
 
-## Forms and project pages
+## Формы и страницы проекта
 
-(see examples of screenshots of pages in the project directory */public/img/*)
+(смотрите примеры скриншотов страниц в директории проекта */public/img/*)
 
-+ **Main page**
++ **Главная страница**
 
 URL: /
 
-Purpose: is a list of new questions, sorted by the date they were added, starting with the most recent. The list is displayed using pagination, 10 questions are displayed on one page.
+Назначение: представляет из себя список новых вопросов, отсортированных по дате добавления, начиная с самых свежих. Список отображается с использованием нумерации страниц, по 10 вопросов на одной странице.
 
-+ **List of popular questions**
++ **Список популярных вопросов**
 
 URL: /popular/
 
-Purpose: is a list of "popular" questions. The list displays questions in descending order of rating using pagination. 10 questions are displayed on one page.
+Назначение: представляет из себя список "популярных" вопросов. В списке выводятся вопросы в порядке убывания рейтинга с использованием нумерации страниц, по 10 вопросов на одной странице.
 
-+ **Single question page**
++ **Страница одного вопроса**
 
-URL: /question/12/ (where 12 - question_id)
+URL: /question/12/ (где 12 - идентификатор вопроса)
 
-Purpose: on this page you can see the text of the question, the author, the date and time of publication, the rating and the list of answers to the question. This page can only be viewed by authorized users. Authorized users can "Like" the question and can add their own answer.
+Назначение: на этой странице вы можете увидеть текст вопроса, автора, дату и время публикации, рейтинг и список ответов на вопрос. Эту страницу могут просматривать только авторизованные пользователи. Авторизованные пользователи могут поставить «Лайк» вопросу и могут добавить свой ответ.
 
-+ **Registration page**
++ **Страница регистрации**
 
 URL: /signup/
 
-Purpose: the user can enter his name, email, password and register in the project.
+Назначение: пользователь может ввести свое имя, адрес электронной почты, пароль и зарегистрироваться в проекте.
 
-+ **Login page**
++ **Страница авторизации**
 
 URL: /login/
 
-Purpose: the user can enter his name and password and authorize (log in) in the project.
+Назначение: пользователь может ввести свое имя и пароль и авторизоваться в проекте (войти на сайт).
 
-+ **Add question page**
++ **Страница добавления вопроса**
 
 URL: /ask/
 
-Purpose: an authorized user can ask a question and then go to the page of this question.
+Назначение: авторизованный пользователь может задать вопрос, после чего перейдет на страницу этого вопроса.
 
-+ **Like/Dislike system**
++ **Система Like/Dislike**
 
 URL: /like/
 
-Purpose: the user can click the "Like" button for the question and this will increase the rating of the question. The user can put "Like" no more than 1 time for 1 question. If the user no longer likes the question, then he can click the "Dislike" button and this will return the question's rating back. The Like/Dislike system is implemented using AJAX requests.
+Назначение: пользователь может нажать кнопку «Like» у вопроса и это повысит рейтинг вопроса. Пользователь может поставить «Like» не более 1 раза для 1 вопроса. Если пользователю больше не нравится вопрос, он может нажать кнопку «Dislike», и это вернет рейтинг вопроса обратно. Система Like/Dislike реализована с использованием AJAX-запросов.
 
 ---
 
 
-### Quick start guide for starting a service on your local computer
+### Краткое руководство по запуску сервиса на вашем локальном компьютере
 
-1. Create a folder for the project called 'project_name'. Go to this folder and clone the repository with the project:
+1. Создайте папку для проекта с названием 'project_name'. Перейдите в эту папку и склонируйте репозиторий с проектом:
 
     ```
     git clone https://github.com/KonstErz/s_web_project.git
     ```
 
-2. Create a virtual python3 environment in the same folder using *virtualenv*:
+2. Создайте виртуальное python3-окружение в этой же папке с помощью *virtualenv*:
 
     ```
     virtualenv -p python3 venv
     ```
 
-where *'venv'* is the name of the virtual environment. If you don't have virtualenv installed, you can install it using the commands:
-
-    ```
+где *'venv'* - название виртуального окружения. Если у вас не установлен virtualenv, вы можете установить его, используя команды:
+    
     sudo apt update
     sudo apt install virtualenv
-    ```
+    
+а также в вашей системе должен быть установлен Python3 (рекомендуется python версии 3.6 и выше).
 
-and also must have Python3 installed on your system (python 3.6+ recommended).
-
-3. Activate the virtual environment:
+3. Активируйте виртуальное окружение:
 
     ```
     . venv/bin/activate
     ```
 
-4. Go to the project folder and call the command to set all requirements:
+4. Перейдите в папку проекта и вызовите команду для установки зависимостей:
 
     ```
     bash commands_2.sh
     ```
 
-Can check if Python finds Django module:
-
-    ```
+Вы можете проверить, находит ли Python модуль Django:
+    
     python3 -m django --version
-    ```
-
-5. This project can work on 2 databases: MySQL (by default) and SQLite 3. You need to go to the MySQL console client (from the root password) and create a database for the Django web application to work:
+    
+5. Этот проект может работать с 2 базами данных: MySQL (по умолчанию) и SQLite 3. Вам нужно перейти в консольный клиент MySQL (используя пароля root) и создать базу данных для работы веб-приложения Django:
 
     ```
     mysql -u root -p
@@ -119,9 +115,9 @@ Can check if Python finds Django module:
     mysql> FLUSH PRIVILEGES;
     ```
 
-To exit MySQL use the key combination Ctrl+D.
+Для выхода из MySQL используйте комбинацию клавиш Ctrl+D.
 
-6. Go to the *'ask'* directory of the project with *manage.py* file, apply all migrations, create a superuser and start the server:
+6. Перейдите в директорию *'ask'* проекта с файлом *manage.py*, примените все миграции, создайте суперпользователя и запустите сервер:
 
     ```
     python3 manage.py makemigrations
@@ -130,31 +126,32 @@ To exit MySQL use the key combination Ctrl+D.
     python3 manage.py runserver
     ```
 
-Now you can go to the server http://localhost:8000/ in your browser. Try to register a test user in the system, add new questions and answers. Ctrl+C - to exit debug mode of a web application and `deactivate` - command to exit the virtual environment.
+Теперь вы можете перейти на сервер по адресу http://localhost:8000/ в вашем браузере. Попробуйте создать тестового пользователя в системе, добавить новые вопросы и ответы. 
+Ctrl+C - для выхода из режима отладки веб-приложения и`deactivate` - команда для выхода из виртуального окружения.
 
-### Quick guide to starting the service in the testing terminal of the online course "Web Technologies"
+### Краткое руководство по запуску сервиса в проверяющем терминале онлайн-курса «Веб-технологии»
 
-**Attention! You may have difficulty making decisions at certain points in the course. This is due to outdated versions of modules and instability of validation tests. Further reading the comments for the lesson may help you solve your problem.**
+**Внимание! У вас могут возникнуть трудности с отправкой решений на определенных шагах курса. Это связано с устаревшими версиями модулей и нестабильностью проверочных тестов. Дополнительное чтение комментариев к урокам может помочь вам решить вашу проблему.**
 
-1. After starting the testing VM, clone the repository with the project to the */home/box/web* directory:
+1. После запуска тестовой виртуальной машины склонируйте репозиторий с проектом в директорию */home/box/web*:
 
     ```
     git clone https://github.com/KonstErz/s_web_project.git /home/box/web
     ```
 
-2. Go to the */home/box/web* directory and run the command to install the requirements:
+2. Перейдите в директорию */home/box/web* и вызовите команду для установки зависимостей:
 
     ```
     sudo bash commands_1.sh
     ```
 
-3. On a test system, the nginx http server should listen on port 80 by default and proxy client requests to the gunicorn application server host, which uses django as a wsgi application to handle requests. Commands for connecting servers are in the *init.sh* file:
+3. В проверяющей системе http-сервер nginx должен прослушивать по умолчанию порт 80 и проксировать запросы клиента на хост application-сервера gunicorn, который эксплуатирует django как wsgi-приложение для обработки запросов. Команды для подключения серверов находятся в файле *init.sh*:
 
     ```
     bash init.sh
     ```
 
-4. You may experience unexpected exceptions from MySQL side, so try running your project with the default SQLite 3 database. To do this, edit the *home/box/web/ask/ask/settings.py* file using the *nano* editor: in the *DATABASES* section, remove the *mysql* section and set the database name *'sqlite3'* to *'default'*. The section should look like this:
+4. Вы можете столкнуться с неожиданными исключениями со стороны MySQL, поэтому попробуйте запустить свой проект с базой данных SQLite 3 по умолчанию. Для этого отредактируйте файл *home/box/web/ask/ask/settings.py* с помощью редактора *nano*: в разделе *DATABASES* удалите секцию касательно *mysql* и установите имя базы данных *'sqlite3'* в значение *'default'*. Данный раздел должен выглядеть следующим образом:
 
     ```
     DATABASES = {
@@ -165,7 +162,7 @@ Now you can go to the server http://localhost:8000/ in your browser. Try to regi
     }
     ```
 
-5. Go to *home/box/web/ask* directory and do all the necessary migrations:
+5. Перейдите в директорию *home/box/web/ask* и проведите все необходимые миграции:
 
     ```
     python3 manage.py makemigrations
