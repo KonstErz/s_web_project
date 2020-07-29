@@ -82,11 +82,9 @@ Purpose: the user can click the "Like" button for the question and this will inc
     ```
 
 where *'venv'* is the name of the virtual environment. If you don't have virtualenv installed, you can install it using the commands:
-
-    ```
+    
     sudo apt update
     sudo apt install virtualenv
-    ```
 
 and also must have Python3 installed on your system (python 3.6+ recommended).
 
@@ -103,11 +101,9 @@ and also must have Python3 installed on your system (python 3.6+ recommended).
     ```
 
 Can check if Python finds Django module:
-
-    ```
-    python3 -m django --version
-    ```
-
+    
+    `python3 -m django --version`
+    
 5. This project can work on 2 databases: MySQL (by default) and SQLite 3. You need to go to the MySQL console client (from the root password) and create a database for the Django web application to work:
 
     ```
