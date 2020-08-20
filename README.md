@@ -72,7 +72,7 @@ Purpose: the user can click the "Like" button for the question and this will inc
 1. Create a folder for the project called 'project_name'. Go to this folder and clone the repository with the project:
 
     ```
-    git clone https://github.com/KonstErz/s_web_project.git
+    git clone https://github.com/KonstErz/s_web_project.git .
     ```
 
 2. Create a virtual python3 environment in the same folder using *virtualenv*:
@@ -94,7 +94,7 @@ and also must have Python3 installed on your system (python 3.6+ recommended).
     . venv/bin/activate
     ```
 
-4. Go to the project folder and call the command to set all requirements:
+4. Call the command to set all requirements:
 
     ```
     bash commands_2.sh
@@ -102,9 +102,9 @@ and also must have Python3 installed on your system (python 3.6+ recommended).
 
 Can check if Python finds Django module:
     
-    python3 -m django --version
+    python -m django --version
     
-5. This project can work on 2 databases: MySQL (by default) and SQLite 3. You need to go to the MySQL console client (from the root password) and create a database for the Django web application to work:
+5. This project can work on 2 databases: MySQL (by default) and SQLite 3. You need to go to the MySQL console client (from the root password) and create a database for the Django web application to work (you can learn more about working with MySQL from the documentation on the [official website](https://dev.mysql.com/doc/mysql-getting-started/en/)):
 
     ```
     mysql -u root -p
@@ -120,13 +120,13 @@ To exit MySQL use the key combination Ctrl+D.
 6. Go to the *'ask'* directory of the project with *manage.py* file, apply all migrations, create a superuser and start the server:
 
     ```
-    python3 manage.py makemigrations
-    python3 manage.py migrate
-    python3 manage.py createsuperuser
-    python3 manage.py runserver
+    python manage.py makemigrations
+    python manage.py migrate
+    python manage.py createsuperuser
+    python manage.py runserver
     ```
 
-Now you can go to the server http://localhost:8000/ in your browser. Try to register a test user in the system, add new questions and answers. 
+Now you can go to the server http://localhost:8000/ in your browser. Try to register a test user in the system, add new questions and answers.  
 Ctrl+C - to exit debug mode of a web application and `deactivate` - command to exit the virtual environment.
 
 ### Quick guide to starting the service in the testing terminal of the online course "Web Technologies"
